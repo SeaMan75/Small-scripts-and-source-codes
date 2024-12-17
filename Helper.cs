@@ -1,4 +1,4 @@
-//Version 1.0.0.2
+//Version 1.0.0.3
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -293,9 +293,11 @@ namespace main
 			const int HTCAPTION = 0x2;
 
 			const string TOTAL_COMMANDER_PATH = @"C:\Total Commander Extended\Totalcmd64.exe";
+			
 			const string OPERA_PATH = @"C:\Users\bgnic\AppData\Local\Programs\Opera\opera.exe";
 			const string OPERA_CLASS_NAME = @"Chrome_WidgetWin_1";
 			const string OPERA_TITLE = @"*";
+			
 			const string TODO_PATH = @"C:\Users\bgnic\AppData\Local\Swift\To-Do List\Swift To-Do List.exe";
 			const string WORD_PATH = @"C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE";
 			
@@ -303,13 +305,14 @@ namespace main
 			const string SUBLIME_PATH = @"C:\Program Files\Sublime Text\sublime_text.exe";
 			const string NETBEANS_PATH = @"C:\Program Files\NetBeans-23\netbeans\bin\netbeans64.exe";
 			
-			const string VISUAL_STUDIO_CODE_PATH = @"C:\Users\bgnic\AppData\Local\Programs\Microsoft VS Code\Code.exe";
 			const string VISUAL_STUDIO_CODE_TITLE = @"*Visual Studio Code";
 			const string VISUAL_STUDIO_CLASS_NAME = @"Chrome_WidgetWin_1";	
 			const string VISUAL_STUDIO_PROGRAM = @"Code.exe";	
 
 			const string TOTAL_COMMANDER_TITLE = "*Total Commander (x64) 11.03*";
 			const string TOTAL_COMMANDER_CLASS_NAME = "TTOTAL_CMD";
+			
+			const string VISUAL_STUDIO_CODE_PATH = @"C:\Users\bgnic\AppData\Local\Programs\Microsoft VS Code\Code.exe";
 			const string VISUAL_STUDIO_CODE_HEADER = "* Visual Studio Code";
 			const string VISUAL_STUDIO_CODE_CLASS_NAME = "Chrome_WidgetWin_1";
 			const string VISUAL_STUDIO_CODE_PROGRAM = "Code.exe";
@@ -322,7 +325,13 @@ namespace main
 			const string SWIFT_TO_DO_LIST_HEADER = "Swift To-Do List 11*";
 			const string SWIFT_TO_DO_LIST_CLASS_NAME = "*.Window.*;";
 			const string SWIFT_TO_DO_LIST_PROGRAM = "";
-
+			
+			const string FAR_MANAGER_PATH = @"C:\Program Files\ConEmu\ConEmu64.exe";
+			const string FAR_MANAGER_TITLE = @"*Far*";
+			const string FAR_MANAGER_CLASS_NAME = @"VirtualConsoleClass"; 
+			const string FAR_MANAGER_PROGRAM = @"ConEmu64.exe";	
+			
+			
 			static void Main()
 			{
 				script.setup(trayIcon: true, sleepExit: true);
@@ -397,7 +406,9 @@ namespace main
 				var button10 =
 					CreateButton(tabPage2, "Skype - VS Code", new DrawingPoint(10, 10),
 								 (sender, e) => FindWindow10());
-				
+				var button11 =
+					CreateButton(tabPage2, "Opera - FarManager", new DrawingPoint(10, 50),
+								 (sender, e) => FindWindow11());
 				
 
 				form.ShowDialog();
@@ -569,9 +580,23 @@ namespace main
 				dx: 512, dy: 128, (skype, vscode));
 			}
 			
-			
-			
+			static void FindWindow11()
+			{
+				var far_manager = new ProgramInfo(
+						path: FAR_MANAGER_PATH
+						, title: FAR_MANAGER_TITLE
+						, className: FAR_MANAGER_CLASS_NAME);
+				var opera = new ProgramInfo(
+						path: OPERA_PATH
+						, title: OPERA_TITLE
+						, className: OPERA_CLASS_NAME);
+				
+				FindAndLocateWindows(
+				dx: 512, dy: 128, (opera, far_manager));
+			}
 
+			
+			
 			static void Click1()
 			{
 
