@@ -1,4 +1,4 @@
-//Version 1.0.0.1
+//Version 1.0.0.2
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -6,12 +6,34 @@ using System.Windows.Forms;
 using DrawingSize = System.Drawing.Size;
 using DrawingPoint = System.Drawing.Point;
 using MessageBox = System.Windows.Forms.MessageBox;
+using main;
 
 #pragma warning disable CS1591  // Missing XML comment for publicly visible type
 // or member
 
 namespace main
 {
+
+	public class ProgramInfo
+	{
+		public string Path { get; }
+		public string Title { get; }
+		public string ClassName { get; }
+		public WOwner Owner { get; }
+
+		// Конструктор
+		public ProgramInfo(string path
+				, string title
+				, string className
+				, WOwner owner = default)
+		{
+			Title = title;
+			ClassName = className;
+			Owner = owner;
+			Path = path;
+		}
+	}
+
 	public static class WindowHelper
 	{
 		public static string lastErrorMessage = "";
@@ -28,6 +50,97 @@ namespace main
 			public int Bottom;
 		}
 
+
+		public static bool MoveWindowLeft(int dx, int dy, ProgramInfo programInfo)
+		{
+			int screenWidth;
+			int screenHeight;
+			bool result = true;
+
+			try
+			{
+				var hwnd = wnd.find(1, programInfo.Title
+									, programInfo.ClassName
+									, programInfo.Owner).Activate();
+				// Получаем размеры экрана
+				screenWidth = Screen.PrimaryScreen.Bounds.Width - dx;
+				screenHeight = Screen.PrimaryScreen.Bounds.Height - dy;
+				// Располагаем w1 в левой части экрана
+				hwnd.Move(0, 0, screenWidth / 2, screenHeight);
+			}
+			catch (Exception ex)
+			{
+				lastErrorMessage = ex.Message;
+				result = false;
+			}
+			return result;
+		}
+
+		public static bool MoveWindowRight(int dx, int dy, ProgramInfo programInfo)
+		{
+			int screenWidth;
+			int screenHeight;
+			bool result = true;
+
+			try
+			{
+				var hwnd = wnd.find(1, programInfo.Title
+									, programInfo.ClassName
+									, programInfo.Owner).Activate();
+				// Получаем размеры экрана
+				screenWidth = Screen.PrimaryScreen.Bounds.Width - dx;
+				screenHeight = Screen.PrimaryScreen.Bounds.Height - dy;
+				// Располагаем в левой части экрана
+				hwnd.Move(screenWidth / 2 + dx, 0, screenWidth / 2, screenHeight);
+			}
+			catch (Exception)
+			{
+				result = false;
+			}
+			return result;
+		}
+
+		public static bool MoveWindowCenter(ProgramInfo programInfo)
+		{
+			int screenWidth;
+			int screenHeight;
+			bool result = true;
+
+			try
+			{
+				var hwnd = wnd.find(1, programInfo.Title
+									, programInfo.ClassName
+									, programInfo.Owner).Activate();
+				IntPtr hWndPtr = hwnd.Handle; // Предполагаем, что у hwnd есть свойство Handle для получения IntPtr
+											  // Получаем размеры экрана
+				screenWidth = Screen.PrimaryScreen.Bounds.Width;
+				screenHeight = Screen.PrimaryScreen.Bounds.Height;
+				// Получаем размеры окна
+				RECT rect;
+
+				if (GetWindowRect(hWndPtr, out rect))
+				{
+					int windowWidth = rect.Right - rect.Left;
+					int windowHeight = rect.Bottom - rect.Top;
+
+					// Располагаем окно в центре экрана
+					hwnd.Move((screenWidth - windowWidth) / 2,
+							  (screenHeight - windowHeight) / 2, windowWidth,
+							  windowHeight);
+				}
+				else
+				{
+					result = false;
+				}
+			}
+			catch (Exception)
+			{
+				result = false;
+			}
+			return result;
+		}
+
+		//-------------------------------------------------
 		public static bool MoveWindowLeft(int dx, int dy,
 										  string name, string cn, WOwner of = default)
 		{
@@ -113,6 +226,34 @@ namespace main
 			return result;
 		}
 
+		//----------------------------------------------
+
+		public static void FindAndLocateWindows(int dx, int dy, (ProgramInfo, ProgramInfo) programInfo)
+		{
+
+			if (!MoveWindowLeft(dx, dy, programInfo.Item1))
+			{
+				System.Diagnostics.Process.Start($"{programInfo.Item1.Path}");
+				MoveWindowLeft(dx, dy, programInfo.Item1);
+			}
+			if (!MoveWindowRight(dx, dy, programInfo.Item2))
+			{
+				System.Diagnostics.Process.Start($"{programInfo.Item2.Path}");
+				MoveWindowRight(dx, dy, programInfo.Item2);
+			}
+		}
+
+		public static void FindAndLocateWindow(ProgramInfo programInfo)
+		{
+
+			if (!MoveWindowCenter(programInfo))
+			{
+				System.Diagnostics.Process.Start($"{programInfo.Path}");
+				MoveWindowCenter(programInfo);
+			}
+		}
+
+
 		public static void FindAndLocateWindows(int dx, int dy, (string, string) path
 						, string name1, string cn1, string name2, string cn2, WOwner of1 = default, WOwner of2 = default)
 		{
@@ -153,15 +294,34 @@ namespace main
 
 			const string TOTAL_COMMANDER_PATH = @"C:\Total Commander Extended\Totalcmd64.exe";
 			const string OPERA_PATH = @"C:\Users\bgnic\AppData\Local\Programs\Opera\opera.exe";
+			const string OPERA_CLASS_NAME = @"Chrome_WidgetWin_1";
+			const string OPERA_TITLE = @"*";
 			const string TODO_PATH = @"C:\Users\bgnic\AppData\Local\Swift\To-Do List\Swift To-Do List.exe";
 			const string WORD_PATH = @"C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE";
-			const string SKYPE_PATH = @"C:\Program Files\WindowsApps\Microsoft.SkypeApp_15.132.3201.0_x64__kzf8qxf38zg5c\Skype\Skype.exe";
+			
 			const string PYCHARM_PATH = @"C:\Program Files\JetBrains\PyCharm2024.3\bin\pycharm64.exe";
 			const string SUBLIME_PATH = @"C:\Program Files\Sublime Text\sublime_text.exe";
 			const string NETBEANS_PATH = @"C:\Program Files\NetBeans-23\netbeans\bin\netbeans64.exe";
+			
+			const string VISUAL_STUDIO_CODE_PATH = @"C:\Users\bgnic\AppData\Local\Programs\Microsoft VS Code\Code.exe";
+			const string VISUAL_STUDIO_CODE_TITLE = @"*Visual Studio Code";
+			const string VISUAL_STUDIO_CLASS_NAME = @"Chrome_WidgetWin_1";	
+			const string VISUAL_STUDIO_PROGRAM = @"Code.exe";	
 
-			const string TOTAL_COMMANDER_HEADER = "*Total Commander (x64) 11.03*";
+			const string TOTAL_COMMANDER_TITLE = "*Total Commander (x64) 11.03*";
+			const string TOTAL_COMMANDER_CLASS_NAME = "TTOTAL_CMD";
+			const string VISUAL_STUDIO_CODE_HEADER = "* Visual Studio Code";
+			const string VISUAL_STUDIO_CODE_CLASS_NAME = "Chrome_WidgetWin_1";
+			const string VISUAL_STUDIO_CODE_PROGRAM = "Code.exe";
+			
+			const string SKYPE_PATH = @"C:\Program Files\WindowsApps\Microsoft.SkypeApp_15.132.3201.0_x64__kzf8qxf38zg5c\Skype\Skype.exe";
+			const string SKYPE_TITLE = "Skype";
+			const string SKYPE_CLASS_NAME = "Chrome_WidgetWin_1";
+			const string SKYPE_PROGRAM = "Skype.exe";
 
+			const string SWIFT_TO_DO_LIST_HEADER = "Swift To-Do List 11*";
+			const string SWIFT_TO_DO_LIST_CLASS_NAME = "*.Window.*;";
+			const string SWIFT_TO_DO_LIST_PROGRAM = "";
 
 			static void Main()
 			{
@@ -234,6 +394,11 @@ namespace main
 				var button9 =
 					CreateButton(tabPage1, "Sublime - Net Beans", new DrawingPoint(10, 330),
 								 (sender, e) => FindWindow9());
+				var button10 =
+					CreateButton(tabPage2, "Skype - VS Code", new DrawingPoint(10, 10),
+								 (sender, e) => FindWindow10());
+				
+				
 
 				form.ShowDialog();
 			}
@@ -271,17 +436,18 @@ namespace main
 
 			static void FindWindow1()
 			{
+				var totalCommander = new ProgramInfo(
+						path: TOTAL_COMMANDER_PATH
+						, title: TOTAL_COMMANDER_TITLE
+						, className: TOTAL_COMMANDER_CLASS_NAME);
+				var opera = new ProgramInfo(
+						path: OPERA_PATH
+						, title: "*"
+						, className: OPERA_CLASS_NAME
+						, owner: "opera.exe");
+				
 				FindAndLocateWindows(
-					dx: 512,
-					dy: 128,
-					path: (TOTAL_COMMANDER_PATH, OPERA_PATH),
-					name1: TOTAL_COMMANDER_HEADER,
-					cn1: "TTOTAL_CMD",
-					name2: "*",
-					cn2: "Chrome_WidgetWin_1",
-					of1: default,
-					of2: "opera.exe"
-				);
+				dx: 512, dy: 128, (totalCommander, opera));
 			}
 
 			static void FindWindow2()
@@ -291,10 +457,10 @@ namespace main
 					dx: 512,
 					dy: 128,
 					path: (TODO_PATH, TOTAL_COMMANDER_PATH),
-					name1: "Swift To-Do List 11*",
-					cn1: "*.Window.*",
-					name2: TOTAL_COMMANDER_HEADER,
-					cn2: "TTOTAL_CMD",
+					name1: SWIFT_TO_DO_LIST_HEADER,
+					cn1: SWIFT_TO_DO_LIST_CLASS_NAME,
+					name2: TOTAL_COMMANDER_TITLE,
+					cn2: TOTAL_COMMANDER_CLASS_NAME,
 					of1: default,
 					of2: default
 				);
@@ -363,7 +529,7 @@ namespace main
 					dx: 512,
 					dy: 128,
 					path: (TOTAL_COMMANDER_PATH, NETBEANS_PATH),
-					name1: TOTAL_COMMANDER_HEADER,
+					name1: TOTAL_COMMANDER_TITLE,
 					cn1: "TTOTAL_CMD",
 					name2: "Apache NetBeans IDE 23",
 					cn2: "SunAwtFrame",
@@ -387,6 +553,24 @@ namespace main
 					of2: "netbeans64.exe"
 					);
 			}
+			
+			static void FindWindow10()
+			{
+				var skype = new ProgramInfo(
+						path: SKYPE_PATH
+						, title: SKYPE_TITLE
+						, className: SKYPE_CLASS_NAME);
+				var vscode = new ProgramInfo(
+						path: VISUAL_STUDIO_CODE_PATH
+						, title: VISUAL_STUDIO_CODE_TITLE
+						, className: VISUAL_STUDIO_CODE_CLASS_NAME);
+				
+				FindAndLocateWindows(
+				dx: 512, dy: 128, (skype, vscode));
+			}
+			
+			
+			
 
 			static void Click1()
 			{
