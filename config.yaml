@@ -1,0 +1,66 @@
+programs:
+  1:
+    path: "C:\\Program Files\\Obsidian\\Obsidian.exe"
+    title: "*Obsidian*"
+    className: "Chrome_WidgetWin_1"
+    owner: "Obsidian.exe"
+  2:
+    path: "C:\\Users\\bgnic\\AppData\\Local\\Programs\\Opera\\opera.exe"
+    title: "*"
+    className: "Chrome_WidgetWin_1"
+    owner: "opera.exe"
+  3:
+    path: "C:\\Users\\bgnic\\AppData\\Local\\Swift\\To-Do List\\Swift To-Do List.exe"
+    title: ""
+    className: ""
+    owner: ""
+  4:
+    path: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+    title: "*Word"
+    className: "OpusApp"
+    owner: "WINWORD.EXE"
+  5:
+    path: "C:\\Program Files\\JetBrains\\PyCharm2024.3\\bin\\pycharm64.exe"
+    title: ""
+    className: ""
+    owner: ""
+  6:
+    path: "C:\\Program Files\\Sublime Text\\sublime_text.exe"
+    title: ""
+    className: ""
+    owner: ""
+  7:
+    path: "C:\\Program Files\\NetBeans-23\\netbeans\\bin\\netbeans64.exe"
+    title: "*Apache NetBeans*"
+    className: "SunAwtFrame"
+    owner: "netbeans64.exe"
+  8:
+    path: "C:\\Total Commander Extended\\Totalcmd64.exe"
+    title: "*Total Commander (x64) 11.03*"
+    className: "TTOTAL_CMD"
+    owner: ""
+  9:
+    path: "C:\\Users\\bgnic\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+    title: "* Visual Studio Code"
+    className: "Chrome_WidgetWin_1"
+    owner: "Code.exe"
+  10:
+    path: "C:\\Program Files\\WindowsApps\\Microsoft.SkypeApp_15.132.3201.0_x64__kzf8qxf38zg5c\\Skype\\Skype.exe"
+    title: "Skype*"
+    className: "Chrome_WidgetWin_1"
+    owner: "Skype.exe"
+  11:
+    path: "C:\\Users\\bgnic\\AppData\\Local\\Swift To-Do List\\Swift To-Do List.exe"
+    title: "Swift To-Do List 11*"
+    className: "*.Window.*;"
+    owner: ""
+  12:
+    path: "C:\\Program Files\\ConEmu\\ConEmu64.exe"
+    title: "*Far*"
+    className: "VirtualConsoleClass"
+    owner: "ConEmu64.exe"
+  13:
+    path: "K:\\VK_Projects\\Василий Воронин\\Assembler 80\\(1)"
+    title: "Модель лабораторного стенда УМПК-80"
+    className: "TLForm1"
+    owner: "K580BM80.EXE"
