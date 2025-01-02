@@ -12,29 +12,16 @@ using System.Windows.Forms;
 namespace main {
 	
 	public class ProgramInfo {
-		public string Path { get; }
-		public string Title { get; }
-		public string ClassName { get; }
-		public WOwner Owner { get; }
-		
-		// Конструктор
-		public ProgramInfo(string path
-				, string title
-				, string className
-				, WOwner owner = default) {
-			Title = title;
-			ClassName = className;
-			Owner = owner;
-			Path = path;
-		}
+		public string Path { get; set; }
+		public string Title { get; set; }
+		public string ClassName { get; set; }
+		public string Owner { get; set; }
 	}
-	
+
 	public class Config {
 		public Dictionary<int, ProgramInfo> Programs { get; set; }
 	}
 
-	
-	
 	public static class WindowHelper {
 		public static string lastErrorMessage = "";
 		[DllImport("user32.dll", SetLastError = true)]
@@ -162,25 +149,31 @@ namespace main {
 			
 			static void Main(string[] args) {
 				script.setup(trayIcon: true, sleepExit: true);
+				// Получаем путь к каталогу, в котором находится исполняемый файл
+				string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+				string configFilePath = Path.Combine(baseDirectory, "config.yaml");
 				
 				var deserializer = new DeserializerBuilder()
-				.WithNamingConvention(CamelCaseNamingConvention.Instance)
-				.Build();
+				.WithNamingConvention(CamelCaseNamingConvention.Instance).Build();
 
-				Config config;
-				using (var reader = new StreamReader("config.yaml")) {
-				config = deserializer.Deserialize<Config>(reader);
-				}
-				
-				foreach (var arg in args) {
-					if (int.TryParse(arg, out int param) && config.Programs.ContainsKey(param)) {
-						var programInfo = config.Programs[param];
-						WindowHelper.FindAndLocateWindow(programInfo);
-						
-					} else {
-						Console.WriteLine($"Неверный или неизвестный параметрпараметр: {arg}");
+				try { 	
+					Config config;
+					using (var reader = new StreamReader(configFilePath))
+					{
+						config = deserializer.Deserialize<Config>(reader);
 					}
 					
+						foreach (var arg in args) {
+							if (int.TryParse(arg, out int param) && config.Programs.ContainsKey(param)) {
+								var programInfo = config.Programs[param];
+								WindowHelper.FindAndLocateWindow(programInfo);
+							} else {
+								Console.WriteLine($"Неверный или неизвестный параметрпараметр: {arg}");
+							}
+						}
+				}
+				catch (Exception ex) {
+					Console.WriteLine(ex.Message);
 				}
 			}
 		}
