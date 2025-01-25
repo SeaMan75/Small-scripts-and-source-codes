@@ -29,13 +29,15 @@ if exist "%dateFolder%" (
 	goto check_folder
 )
 
-mkdir "%dateFolder% - %input%"
-cd "%dateFolder%"
+set folder="%dateFolder% - %input%"
+mkdir %folder%
+cd %folder%
+pause
 mkdir Files
 mkdir "Explanatory notes"
 mkdir Examples
 mkdir Project
 cd "Explanatory notes"
 type nul > "V1.0.0.1 - Explanatory notes.docx"
-start "" "C:\Total Commander Extended\Totalcmd64.exe" /O/R="f:\VK_Projects\#CMD\"/L="%baseDir%\%dateFolder%"
+start "" "C:\Total Commander Extended\Totalcmd64.exe" /O/R="f:\VK_Projects\#CMD\"/L="%baseDir%\%folder%"
 endlocal
